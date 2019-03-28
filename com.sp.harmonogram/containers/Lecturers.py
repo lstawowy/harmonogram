@@ -1,11 +1,14 @@
-from enum import Enum
+from dataclasses import dataclass
 
 
-class Lecturers(Enum):
+@dataclass
+class Lecturers(object):
     lecturers: list
+    total_points: int
 
-    def show_harmonogram(self):
-        pass
+    def __init__(self, lecturers):
+        self.lecturers = lecturers
+        self.count_points()
 
     def count_points(self):
-        pass
+        self.total_points = 1

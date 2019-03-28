@@ -1,8 +1,12 @@
-from enum import Enum
+from dataclasses import dataclass
 
 
-class Rooms(Enum):
+@dataclass
+class Rooms(object):
     rooms: list
+
+    def __init__(self, rooms):
+        self.rooms = rooms
 
     def check_is_available(self):
         pass

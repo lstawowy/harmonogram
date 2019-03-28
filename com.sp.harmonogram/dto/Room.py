@@ -2,10 +2,12 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Lecturer(object):
+class Room(object):
     name: str
     timetable: Timetable
+    capacity: int
 
-    def __init__(self, name, timetable):
+    def __init__(self, name, timetable, capacity):
         self.name = name
         self.timetable = timetable
+        self.capacity = capacity
