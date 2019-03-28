@@ -11,4 +11,5 @@ class Lecturers(object):
         self.count_points()
 
     def count_points(self):
-        self.total_points = 1
+        for lecturer in self.lecturers:
+            self.total_points += lecturer.count_points()

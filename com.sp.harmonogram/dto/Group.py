@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from ..containers.Timetable import Timetable
+
 
 @dataclass
 class Group(object):

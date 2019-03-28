@@ -1,5 +1,8 @@
 from dataclasses import dataclass
 
+from ..containers.Timetable import Timetable
+from ..rules.StudentRules import StudentRules
+
 
 @dataclass
 class Student(object):
@@ -13,4 +16,5 @@ class Student(object):
         self.count_points()
 
     def count_points(self):
-        pass
+        self.timetable.rules = StudentRules()
+        self.timetable.count_all()

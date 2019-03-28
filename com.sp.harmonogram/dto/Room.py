@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from ..containers.Timetable import Timetable
+
 
 @dataclass
 class Room(object):
@@ -11,3 +13,9 @@ class Room(object):
         self.name = name
         self.timetable = timetable
         self.capacity = capacity
+
+    def check_is_available(self):
+        pass
+
+    def show_harmonogram(self):
+        pass
