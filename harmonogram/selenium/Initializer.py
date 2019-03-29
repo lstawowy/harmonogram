@@ -12,12 +12,12 @@ class TimetableParserSelenium(object):
 
     def initialize_webdriver(self):
         options = Options()
-        # options.add_argument('--headless')
-        # options.add_argument('--disable-gpu')
+        options.add_argument('--headless')
+        options.add_argument('--disable-gpu')
         driver = webdriver.Chrome(executable_path=EXECUTABLE_PATH, chrome_options=options)
         driver.get('http://planzajec.eaiib.agh.edu.pl/view/timetable/490?date=2019-03-25')
         courses = driver.find_elements_by_class_name('fc-content')
-        time.sleep(10)
+        time.sleep(2)
         for course in courses:
             parser = TimetableParser()
             parser.parse_text(course.text)
