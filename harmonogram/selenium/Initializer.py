@@ -21,6 +21,7 @@ class TimetableParserSelenium(object):
         for course in courses:
             parser = TimetableParser()
             parser.parse_text(course.text)
+            parser.parse_course(course.text)
         time.sleep(2)  # Let the user actually see something!
         driver.quit()
 

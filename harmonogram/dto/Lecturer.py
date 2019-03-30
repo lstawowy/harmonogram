@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from ..containers.Timetable import Timetable
-from ..rules.LecturerRules import LecturerRules
+from harmonogram.containers.Timetable import Timetable
+from harmonogram.rules.LecturerRules import LecturerRules
 
 
 @dataclass

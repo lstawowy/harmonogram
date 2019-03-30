@@ -1,4 +1,7 @@
 import re
+from datetime import datetime
+
+from harmonogram.dto.Course import Course
 
 
 class TimetableParser(object):
@@ -16,6 +19,35 @@ class TimetableParser(object):
     PROJ_TYPE = 'proj. '
     LAB_TYPE = 'lab. '
     CW_TYPE = 'Ćw. '
+
+    def parse_course(self, course_text):
+        course = Course
+        lines = course_text.split('\n')
+        start_time, end_time = self.parse_time(lines[0])
+        course.start_time = start_time
+        course.end_time = end_time
+
+        course_type = self.parse_course_type(re.search(',(.+)', lines[1]).group(1))
+        course.type = course_type
+        if 'grupa' in lines[1]:
+            splitted = lines[1].split('grupa')
+
+            course.name = re.search('(.+?(?=,))', splitted[0]).group(1)
+            if len(splitted) > 1:
+                course.students_group = splitted[1]
+        else:
+            course.name = re.search('(.+?(?=,))', lines[1]).group(1)
+        splitted = course_text.split('prowadzący:')
+        if len(splitted) >= 1:
+            room = self.find_from_regex('Sala: ([A-Z]-[1-9] [^\s-]*)', splitted[0])
+            if room:
+                course.room = room.group(1)
+        if len(splitted) > 1:
+            titles = self.parse_titles(splitted[1])
+            name = self.find_from_regex('.+?(?=,)', splitted[1])
+            if name:
+                course.lecturer = titles + name.group(0)
+        return course
 
     def parse_text(self, course):
         lines = course.split('\n')
@@ -89,3 +121,9 @@ class TimetableParser(object):
         m = re.search(regex, text)
         if m:
             return m
+
+    def parse_time(self, group_times):
+        times = self.find_from_regex('([0-9]+:[0-9]+)*[ -]*([0-9]+:[0-9]+)', group_times)
+        start_time = datetime.strptime(str(times.group(1)), "%H:%M")
+        end_time = datetime.strptime(str(times.group(2)), "%H:%M")
+        return {start_time, end_time}
