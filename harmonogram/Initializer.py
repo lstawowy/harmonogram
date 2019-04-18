@@ -40,7 +40,7 @@ class Initializer(object):
         for i in range(len(raw_courses)):
             timetable_parser = TimetableParser()
             # timetable_parser.parse_text(raw_courses[i].text)
-            parsed_courses.add_course(course=timetable_parser.parse_course(raw_courses[i].text))
+            parsed_courses.add_course(course=timetable_parser.parse_course(raw_courses[i]))
         return parsed_courses
 
     @staticmethod
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     time.sleep(2)
     courses = parser.parse_courses(web_driver=driver)
 
-    parser.count_points_for_lecturer(parsed_courses=courses)
+    # parser.count_points_for_lecturer(parsed_courses=courses)
     parser.count_points_for_group(parsed_courses=courses)
 
     time.sleep(2)

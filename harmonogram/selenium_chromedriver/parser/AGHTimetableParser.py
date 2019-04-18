@@ -20,13 +20,13 @@ class TimetableParser(object):
     LAB_TYPE = 'lab. '
     CW_TYPE = 'Ćw. '
 
-    def parse_course(self, course_text):
+    def parse_course(self, raw_course):
+        course_text = raw_course.text
         lines = course_text.split('\n')
         start_time, end_time = self.parse_time(lines[0])
         course_type = self.parse_course_type(re.search(',(.+)', lines[1]).group(1))
         if 'grupa' in lines[1]:
             splitted = lines[1].split('grupa')
-
             name = re.search('(.+?(?=,))', splitted[0]).group(1)
             if len(splitted) > 1:
                 students_group = splitted[1]
@@ -45,8 +45,24 @@ class TimetableParser(object):
                 lecturer_name = lecturer_titles + lecturer_name.group(0)
         else:
             lecturer_name = None
+        day_of_week = self.count_day_of_week_based_on_location(raw_course)
         return Course(name=name, start_time=start_time, end_time=end_time, lecturer=lecturer_name, room=room,
-                      course_type=course_type, students_group=students_group, day_of_week=None)
+                      course_type=course_type, students_group=students_group, day_of_week=day_of_week)
+
+    def count_day_of_week_based_on_location(self, raw_course):
+        day_of_week = None
+        fifth_width = 1600 / 5
+        if raw_course.location['x'] < fifth_width:
+            day_of_week = 1
+        if fifth_width <= raw_course.location['x'] < 2 * fifth_width:
+            day_of_week = 2
+        if 2 * fifth_width <= raw_course.location['x'] < 3 * fifth_width:
+            day_of_week = 3
+        if 3 * fifth_width <= raw_course.location['x'] < 4 * fifth_width:
+            day_of_week = 4
+        if 4 * fifth_width <= raw_course.location['x']:
+            day_of_week = 5
+        return day_of_week
 
     def parse_text(self, course):
         lines = course.split('\n')
