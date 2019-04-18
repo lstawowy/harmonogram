@@ -21,33 +21,32 @@ class TimetableParser(object):
     CW_TYPE = 'Ćw. '
 
     def parse_course(self, course_text):
-        course = Course
         lines = course_text.split('\n')
         start_time, end_time = self.parse_time(lines[0])
-        course.start_time = start_time
-        course.end_time = end_time
-
         course_type = self.parse_course_type(re.search(',(.+)', lines[1]).group(1))
-        course.type = course_type
         if 'grupa' in lines[1]:
             splitted = lines[1].split('grupa')
 
-            course.name = re.search('(.+?(?=,))', splitted[0]).group(1)
+            name = re.search('(.+?(?=,))', splitted[0]).group(1)
             if len(splitted) > 1:
-                course.students_group = splitted[1]
+                students_group = splitted[1]
         else:
-            course.name = re.search('(.+?(?=,))', lines[1]).group(1)
+            name = re.search('(.+?(?=,))', lines[1]).group(1)
+            students_group = None
         splitted = course_text.split('prowadzący:')
         if len(splitted) >= 1:
             room = self.find_from_regex('Sala: ([A-Z]-[1-9] [^\s-]*)', splitted[0])
             if room:
-                course.room = room.group(1)
+                room = room.group(1)
         if len(splitted) > 1:
-            titles = self.parse_titles(splitted[1])
-            name = self.find_from_regex('.+?(?=,)', splitted[1])
-            if name:
-                course.lecturer = titles + name.group(0)
-        return course
+            lecturer_titles = self.parse_titles(splitted[1])
+            lecturer_name = self.find_from_regex('.+?(?=,)', splitted[1])
+            if lecturer_name:
+                lecturer_name = lecturer_titles + lecturer_name.group(0)
+        else:
+            lecturer_name = None
+        return Course(name=name, start_time=start_time, end_time=end_time, lecturer=lecturer_name, room=room,
+                      course_type=course_type, students_group=students_group, day_of_week=None)
 
     def parse_text(self, course):
         lines = course.split('\n')
