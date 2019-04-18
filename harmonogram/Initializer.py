@@ -9,8 +9,8 @@ from harmonogram.dto.Group import Group
 from harmonogram.dto.Lecturer import Lecturer
 from harmonogram.selenium_chromedriver.parser.AGHTimetableParser import TimetableParser
 
-DEFAULT_LECTURER = 'Skrz'
-DEFAULT_GROUP = "5b"
+DEFAULT_LECTURER = 'Kutt'
+DEFAULT_GROUP_REGEX = '(5[^a])'
 TIMETABLE_URL = 'http://planzajec.eaiib.agh.edu.pl/view/timetable/490?date=2019-03-25'
 EXECUTABLE_PATH = 'selenium_chromedriver/driver/chromedriver'
 
@@ -18,9 +18,9 @@ EXECUTABLE_PATH = 'selenium_chromedriver/driver/chromedriver'
 class Initializer(object):
 
     @staticmethod
-    def count_points_for_group(parsed_courses, group=DEFAULT_GROUP):
+    def count_points_for_group(parsed_courses, group=DEFAULT_GROUP_REGEX):
         timetable = Timetable([])
-        timetable.courses = parsed_courses.find_by_group(group=group)
+        timetable.courses = parsed_courses.find_by_group(group_regex=group)
         group = Group(name=group, field_of_study=None, timetable=timetable, students_count=30)
         return group
 
@@ -50,6 +50,7 @@ class Initializer(object):
         options.add_argument('--disable-gpu')
         chrome_driver = webdriver.WebDriver(executable_path=EXECUTABLE_PATH, chrome_options=options)
         chrome_driver.get(url)
+        chrome_driver.set_window_size(1200, 1080)
         return chrome_driver
 
 
@@ -59,8 +60,8 @@ if __name__ == '__main__':
     time.sleep(2)
     courses = parser.parse_courses(web_driver=driver)
 
-    # parser.count_points_for_lecturer(parsed_courses=courses)
-    parser.count_points_for_group(parsed_courses=courses)
+    parser.count_points_for_lecturer(parsed_courses=courses)
+    # parser.count_points_for_group(parsed_courses=courses)
 
     time.sleep(2)
     driver.quit()

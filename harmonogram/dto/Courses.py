@@ -11,14 +11,14 @@ class Courses(object):
     def find_by_lecturer(self, lecturer):
         result = []
         for course in self.courses:
-            if course.match_lecturer(lecturer=lecturer):
+            if course.match_lecturer(lecturer_regex=lecturer):
                 result.append(course)
         return result
 
-    def find_by_group(self, group):
+    def find_by_group(self, group_regex):
         result = []
         for course in self.courses:
-            if course.match_students_group(group=group):
+            if course.match_students_group(group_regex=group_regex):
                 result.append(course)
         return result
 

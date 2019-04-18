@@ -24,7 +24,17 @@ class TimetableParser(object):
         course_text = raw_course.text
         lines = course_text.split('\n')
         start_time, end_time = self.parse_time(lines[0])
+
         course_type = self.parse_course_type(re.search(',(.+)', lines[1]).group(1))
+        name, students_group = self.split_course_name_and_students_group(lines)
+        lecturer_name, room = self.split_lecturer_and_room(course_text)
+        day_of_week = self.count_day_of_week_based_on_location(raw_course)
+
+        return Course(name=name, start_time=start_time, end_time=end_time, lecturer=lecturer_name, room=room,
+                      course_type=course_type, students_group=students_group, day_of_week=day_of_week)
+
+    def split_course_name_and_students_group(self, lines):
+        students_group = None
         if 'grupa' in lines[1]:
             splitted = lines[1].split('grupa')
             name = re.search('(.+?(?=,))', splitted[0]).group(1)
@@ -32,26 +42,25 @@ class TimetableParser(object):
                 students_group = splitted[1]
         else:
             name = re.search('(.+?(?=,))', lines[1]).group(1)
-            students_group = None
+        return name, students_group
+
+    def split_lecturer_and_room(self, course_text):
         splitted = course_text.split('prowadzący:')
         if len(splitted) >= 1:
             room = self.find_from_regex('Sala: ([A-Z]-[1-9] [^\s-]*)', splitted[0])
             if room:
                 room = room.group(1)
+        lecturer_name = None
         if len(splitted) > 1:
             lecturer_titles = self.parse_titles(splitted[1])
             lecturer_name = self.find_from_regex('.+?(?=,)', splitted[1])
             if lecturer_name:
                 lecturer_name = lecturer_titles + lecturer_name.group(0)
-        else:
-            lecturer_name = None
-        day_of_week = self.count_day_of_week_based_on_location(raw_course)
-        return Course(name=name, start_time=start_time, end_time=end_time, lecturer=lecturer_name, room=room,
-                      course_type=course_type, students_group=students_group, day_of_week=day_of_week)
+        return lecturer_name, room
 
     def count_day_of_week_based_on_location(self, raw_course):
         day_of_week = None
-        fifth_width = 1600 / 5
+        fifth_width = 1200 / 5
         if raw_course.location['x'] < fifth_width:
             day_of_week = 1
         if fifth_width <= raw_course.location['x'] < 2 * fifth_width:

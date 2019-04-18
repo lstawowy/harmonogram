@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 from dataclasses import dataclass
@@ -24,15 +25,17 @@ class Course(object):
         self.course_type = course_type
         self.students_group = students_group
 
-    def match_lecturer(self, lecturer):
+    def match_lecturer(self, lecturer_regex):
         if self.lecturer:
-            if self.lecturer.find(lecturer):
+            if self.find_from_regex(lecturer_regex, self.lecturer):
                 return self
 
-    def match_students_group(self, group):
+    def match_students_group(self, group_regex):
         if self.students_group:
-            if self.students_group.find(group):
+            if self.find_from_regex(group_regex, self.students_group):
                 return self
+        else:
+            return self
 
     def match_room(self, room):
         if self.room.find(room):
@@ -44,3 +47,9 @@ class Course(object):
 
     def show(self):
         return self.name + self.lecturer + str(self.start_time)
+
+    @staticmethod
+    def find_from_regex(regex, text):
+        m = re.search(regex, text)
+        if m:
+            return m
