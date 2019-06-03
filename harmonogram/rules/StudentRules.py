@@ -4,7 +4,7 @@ from .Rules import Rules
 class StudentRules(Rules):
     def __init__(self):
         super().__init__()
-        self.poimts_for_teleport = -10
+        self.points_for_teleport = -10
 
         self.max_courses_per_day = 6
 

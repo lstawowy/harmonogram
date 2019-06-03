@@ -15,7 +15,7 @@ class Room(object):
         self.capacity = capacity
 
     def check_is_available(self):
-        pass
+        pass #Czemu tu nic nie ma
 
     def show_harmonogram(self):
-        pass
+        pass #ani tu

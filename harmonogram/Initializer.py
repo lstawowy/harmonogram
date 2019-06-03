@@ -36,7 +36,7 @@ class Initializer(object):
         raw_courses = web_driver.find_elements_by_class_name('fc-content')
         parsed_courses = Courses()
 
-        time.sleep(2)
+        #time.sleep(2)
         for i in range(len(raw_courses)):
             timetable_parser = TimetableParser()
             # timetable_parser.parse_text(raw_courses[i].text)
@@ -49,6 +49,7 @@ class Initializer(object):
         # options.add_argument('--headless')
         options.add_argument('--disable-gpu')
         chrome_driver = webdriver.WebDriver(executable_path=EXECUTABLE_PATH, chrome_options=options)
+        #buton=chrome_driver.find_element_by_xpath("//button")
         chrome_driver.get(url)
         chrome_driver.set_window_size(1200, 1080)
         return chrome_driver
@@ -61,7 +62,11 @@ if __name__ == '__main__':
     courses = parser.parse_courses(web_driver=driver)
 
     parser.count_points_for_lecturer(parsed_courses=courses)
-    # parser.count_points_for_group(parsed_courses=courses)
+    parser.count_points_for_group(parsed_courses=courses)
+
+    group_4a = parser.count_points_for_group(parsed_courses=courses, group='4[^a]')
+    print(group_4a.group_points)
+
 
     time.sleep(2)
     driver.quit()

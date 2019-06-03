@@ -34,7 +34,7 @@ class Course(object):
         if self.students_group:
             if self.find_from_regex(group_regex, self.students_group):
                 return self
-        else:
+        else: #po co ta funkcja skoro zawsze zwraca self? xD nie zawsze
             return self
 
     def match_room(self, room):
@@ -46,7 +46,7 @@ class Course(object):
             return self
 
     def show(self):
-        return self.name + self.lecturer + str(self.start_time)
+        return self.name + self.lecturer + str(self.start_time) + self.students_group
 
     @staticmethod
     def find_from_regex(regex, text):
