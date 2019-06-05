@@ -49,8 +49,13 @@ class Initializer(object):
         # options.add_argument('--headless')
         options.add_argument('--disable-gpu')
         chrome_driver = webdriver.WebDriver(executable_path=EXECUTABLE_PATH, chrome_options=options)
-        #buton=chrome_driver.find_element_by_xpath("//button")
         chrome_driver.get(url)
+        time.sleep(4)
+        button = chrome_driver.find_element_by_xpath("//*[@id=\"fc\"]/div[1]/div[1]/div[1]/button[1]/span")
+        time.sleep(2)
+        button.click()
+        time.sleep(2)
+        button.click()
         chrome_driver.set_window_size(1200, 1080)
         return chrome_driver
 
